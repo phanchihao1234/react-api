@@ -53,6 +53,35 @@ export const searchStudent = createAsyncThunk("student/searchStudent", async (ke
         return apiThunk.rejectWithValue(error.response.data) // Trả về lỗi nếu có
     }
 })
+export const searchStudentByYear = createAsyncThunk("student/searchStudentByYear", async ({ startYear, endYear }, apiThunk) => {
+    const url = BASE_URL + `/student/searchNS?startYear=${startYear}&endYear=${endYear}`
+    try {
+        const response = await axios.get(url);
+        return response.data // Trả về dữ liệu từ phản hồi
+    } catch (error) {
+        return apiThunk.rejectWithValue(error.response.data) // Trả về lỗi nếu có
+    }
+})
+export const searchStudentByXepLoai = createAsyncThunk("student/searchStudentByXepLoai", async (xepLoai, apiThunk) => {
+    const url = BASE_URL + `/student/searchXL`
+    try {
+        const response = await axios.get(url, {
+            params: { "xepLoai": xepLoai }
+        });
+        return response.data // Trả về dữ liệu từ phản hồi
+    } catch (error) {
+        return apiThunk.rejectWithValue(error.response.data) // Trả về lỗi nếu có
+    }
+})
+export const search = createAsyncThunk("student/search", async ({ xepLoai, ten, startYear, endYear }, apiThunk) => {
+    const url = BASE_URL + `/student/search?xepLoai=${xepLoai}&ten=${ten}&startYear=${startYear}&endYear=${endYear}`
+    try {
+        const response = await axios.get(url);
+        return response.data // Trả về dữ liệu từ phản hồi
+    } catch (error) {
+        return apiThunk.rejectWithValue(error.response.data) // Trả về lỗi nếu có
+    }
+})
 const studentSlice = createSlice({
     name: "student",
     initialState: {
@@ -113,6 +142,31 @@ const studentSlice = createSlice({
                 state.status = action.payload.status
             })
             .addCase(searchStudent.rejected, (state, action) => {
+                state.status = action.payload.status
+                state.message = action.payload.message
+                state.error = action.payload.data
+            })
+            .addCase(searchStudentByYear.fulfilled, (state, action) => {
+                state.students = action.payload.data
+                state.status = action.payload.status
+            })
+            .addCase(searchStudentByYear.rejected, (state, action) => {
+                state.status = action.payload.status
+                state.message = action.payload.message
+                state.error = action.payload.data
+            }).addCase(searchStudentByXepLoai.fulfilled, (state, action) => {
+                state.students = action.payload.data
+                state.status = action.payload.status
+            })
+            .addCase(searchStudentByXepLoai.rejected, (state, action) => {
+                state.status = action.payload.status
+                state.message = action.payload.message
+                state.error = action.payload.data
+            }).addCase(search.fulfilled, (state, action) => {
+                state.students = action.payload.data
+                state.status = action.payload.status
+            })
+            .addCase(search.rejected, (state, action) => {
                 state.status = action.payload.status
                 state.message = action.payload.message
                 state.error = action.payload.data
