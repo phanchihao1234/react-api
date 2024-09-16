@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import axios from 'axios';
 import StudentPage from '../pages/student/StudentPage';
+import StudentDetail from '../components/student/StudentDetail';
 
 const BASE_URL = 'http://localhost:8080/api/v1';
 
@@ -82,6 +83,28 @@ export const search = createAsyncThunk("student/search", async ({ xepLoai, ten, 
         return apiThunk.rejectWithValue(error.response.data) // Trả về lỗi nếu có
     }
 })
+export const updateImage = createAsyncThunk("student/updateImage", async ({ id, formData }, apiThunk) => {
+    const url = BASE_URL + `/student/uploads/${id}`
+    try {
+        const response = await axios.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data // Trả về dữ liệu từ phản hồi
+    } catch (error) {
+        return apiThunk.rejectWithValue(error.response.data) // Trả về lỗi nếu có
+    }
+})
+export const getAllImage = createAsyncThunk("student/getAllImage", async (id, apiThunk) => {
+    const url = BASE_URL + `/student/getAllImage/${id}`
+    try {
+        const response = await axios.get(url);
+        return response.data // Trả về dữ liệu từ phản hồi
+    } catch (error) {
+        return apiThunk.rejectWithValue(error.response.data) // Trả về lỗi nếu có
+    }
+})
 const studentSlice = createSlice({
     name: "student",
     initialState: {
@@ -89,6 +112,7 @@ const studentSlice = createSlice({
         totalPages: 10,
         status: "",
         message: "",
+        studentDetail: null,
         error: null
     },
     reducers: {
@@ -171,7 +195,26 @@ const studentSlice = createSlice({
                 state.message = action.payload.message
                 state.error = action.payload.data
             })
-        //search khac tuong tu
+            //search khac tuong tu
+            .addCase(updateImage.fulfilled, (state, action) => {
+                state.students = action.payload.data
+                state.status = action.payload.status
+            })
+            .addCase(updateImage.rejected, (state, action) => {
+                state.status = action.payload.status
+                state.message = action.payload.message
+                state.error = action.payload.data
+            })
+            .addCase(getAllImage.fulfilled, (state, action) => {
+                state.studentDetail = action.payload.data
+                state.status = action.payload.status
+                state.message = action.payload.message
+            })
+            .addCase(getAllImage.rejected, (state, action) => {
+                state.status = action.payload.status
+                state.message = action.payload.message
+                state.error = action.payload.data
+            })
     }
 })
 export const { resetStatusAndMessage } = studentSlice.actions

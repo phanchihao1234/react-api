@@ -4,6 +4,7 @@ import { Alert, Button, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHe
 import { useDispatch, useSelector } from 'react-redux';
 import { addNewStudent, deleteStudent, getAlll, resetStatusAndMessage, search, searchStudent, searchStudentByXepLoai, searchStudentByYear, updateStudent } from '../../redux/studentSlice';
 import ReactPaginate from 'react-paginate';
+import { Link } from 'react-router-dom';
 export default function Student() {
     const [currentPage, setCurrentPage] = useState(0)
     // const [localMessage, setLocalMessage] = useState("");
@@ -435,6 +436,11 @@ export default function Student() {
                                             <Button onClick={() => handle_delete(item.id)} className='btn btn-danger'>Delete </Button>
                                             <Button className="btn btn-success" onClick={() => handle_edit(item.id, item)}>
                                                 Edit
+                                            </Button>
+                                            <Button className='btn btn-primary'>
+                                                <Link className='nav-link' to={`/student-detail/${item.id}`}>
+                                                    Detail
+                                                </Link>
                                             </Button>
                                         </>
                                     }
