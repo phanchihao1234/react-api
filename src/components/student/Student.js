@@ -66,8 +66,6 @@ export default function Student() {
     })
 
 
-
-
     const handle_Change = (e) => {
         const { name, value } = e.target;
 
@@ -428,9 +426,12 @@ export default function Student() {
                                 </td>
                                 <td>
                                     {studentEdit.isEdit && item.id === studentEdit.id ?
-                                        <Button className="btn btn-success"
-                                            onClick={() => handle_save(item.id)}
-                                        >Save </Button>
+                                        <>
+                                            <Button className="btn btn-success"
+                                                onClick={() => handle_save(item.id)}
+                                            >Save </Button>
+
+                                        </>
                                         :
                                         <>
                                             <Button onClick={() => handle_delete(item.id)} className='btn btn-danger'>Delete </Button>
